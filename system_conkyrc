@@ -1,0 +1,128 @@
+background yes
+
+use_xft yes
+xftfont 123:size=8
+xftalpha 0.1
+uppercase no
+override_utf8_locale no
+
+double_buffer yes
+no_buffers yes
+
+update_interval 1
+total_run_times 0
+
+own_window yes
+own_window_type normal
+own_window_colour black
+own_window_argb_visual yes 
+own_window_argb_value 0
+own_window_transparent yes
+own_window_hints undecorated,below,sticky,skip_taskbar,skip_pager
+
+minimum_size 270 5 
+maximum_width 300
+use_spacer right
+
+draw_shades yes
+draw_outline no
+draw_borders no
+draw_graph_borders yes
+default_color gray30
+default_shade_color black
+default_outline_color green
+color0 gray80      # BigBalloon Title
+color1 DarkGreen   # cpu bar
+color2 DarkRed     # cpu graph
+color3 gray14      # cpu bar outline
+color4 yellow4     # mem bar
+
+show_graph_scale yes
+
+cpu_avg_samples 2
+net_avg_samples 1
+temperature_unit fahrenheit
+
+short_units true
+
+
+# ============ Templates ============ #
+#template0 (core frequency) 1:number
+template0 ${voffset 2}${offset 10}${color 506080}\1${color1}${offset 10}${cpubar cpu\1 7,210}${color}${alignr 10}${cpu cpu\1}%\n${color3}${voffset -13}${offset 26}${cpubar cpu9 7,210}${color}
+
+TEXT
+# BigBalloon Productions
+#${font Impact:bold:size=40}${color0}B${font Impact:bold:size=30}IG${voffset -13}${font Impact:bold:size=40}B${font Impact:bold:size=30}ALLOON
+#${voffset -10}${offset 10}${font Impact:bold:size=40}P${font Impact:bold:size=30}RODUCTIONS
+#
+#
+# ============== Date ============== #
+${voffset 20}${color0}${font Arial:bold:size=50}${tztime US/Central %I:%M}${font Arial:bold:size=35}${tztime US/Central %p}
+${font Arial:bold:size=16}${voffset -30}${alignr 0}${tztime US/Central %a} ${tztime US/Central %b} ${tztime US/Pacific %d}, ${tztime US/Central %Y}
+#
+#
+# ========= System Header ========== #
+${voffset 40}${font Arial:bold:size=14}${color Tan1}S${font Arial:bold:size=11}YSTEM ${color DarkSlateGray}${voffset -3}${hr 4}${color}${font Arial:regular:size=8}
+#
+# ============ CPU Info ============ #
+${voffset 20}${alignc 8}${pre_exec cat /proc/cpuinfo | grep -m 1 'model name' | cut -d : -f2 | sed 's/^[ ]*//;s/[ ]*$//'}
+#
+# ======== CPU Bars & Graph ======== #
+${voffset 0}${offset 26}${cpugraph cpu0 50,210 006400 8b8b00 -t}
+${voffset -5}${offset 25}${execi 1 sensors k10temp-pci-* | grep temp1 | egrep -m 1 -o '\+[0-9]+\.[0-9][^ ]*[ ]+' | sed 's/[^0-9]* *$//'}C${alignr 40}Avg: ${cpu cpu0}%
+${voffset 5}${template0 1}
+${if_match ${pre_exec cat /proc/cpuinfo | grep -m 1 siblings | sed -e "s/[ \t]/\+/g" | cut -d+ -f3} >= 2 }${template0 2}${else}${voffset -13}${endif}
+${if_match ${pre_exec cat /proc/cpuinfo | grep -m 1 siblings | sed -e "s/[ \t]/\+/g" | cut -d+ -f3} >= 3 }${template0 3}${else}${voffset -13}${endif}
+${if_match ${pre_exec cat /proc/cpuinfo | grep -m 1 siblings | sed -e "s/[ \t]/\+/g" | cut -d+ -f3} >= 4 }${template0 4}${else}${voffset -13}${endif}
+${if_match ${pre_exec cat /proc/cpuinfo | grep -m 1 siblings | sed -e "s/[ \t]/\+/g" | cut -d+ -f3} >= 5 }${template0 5}${else}${voffset -13}${endif}
+${if_match ${pre_exec cat /proc/cpuinfo | grep -m 1 siblings | sed -e "s/[ \t]/\+/g" | cut -d+ -f3} >= 6 }${template0 6}${else}${voffset -13}${endif}
+${if_match ${pre_exec cat /proc/cpuinfo | grep -m 1 siblings | sed -e "s/[ \t]/\+/g" | cut -d+ -f3} >= 7 }${template0 7}${else}${voffset -13}${endif}
+${if_match ${pre_exec cat /proc/cpuinfo | grep -m 1 siblings | sed -e "s/[ \t]/\+/g" | cut -d+ -f3} >= 8 }${template0 8}${else}${voffset -13}${endif}
+#
+#
+${voffset 10}${offset 10}${color 506080}RAM${offset 10}${color4}${membar 7,193}${color}${alignr 10}${memperc}%
+${color3}${voffset -13}${offset 44}${cpubar cpu9 7,193}${color}
+${alignc -5}${mem}/${memmax}
+#
+${voffset 10}${offset 10}${color 506080}SWAP${offset 3}${color4}${swapbar 7,193}${color}${alignr 10}${swapperc}%
+${color3}${voffset -13}${offset 44}${cpubar cpu9 7,193}${color}
+${alignc -5}${swap}/${swapmax}
+#
+#
+${font Arial:bold:size=10}${voffset 20}${alignc}PROCESSES${font Arial:regular:size=8}
+${voffset -5}${hr 1}
+${color 506080}${voffset -3}${offset 10}Name${alignr 65}cpu %${alignr 35}mem${alignr 10}mem %
+${color}${voffset -7}${hr 1}
+${offset 10}${top name 1}
+${offset 10}${top name 2}
+${offset 10}${top name 3}
+${offset 10}${top name 4}
+${offset 10}${top name 5}
+
+${voffset -77}${alignr 130}${top cpu 1}
+${alignr 130}${top cpu 2}
+${alignr 130}${top cpu 3}
+${alignr 130}${top cpu 4}
+${alignr 130}${top cpu 5}
+
+${voffset -77}${alignr 67}${top mem_res 1}
+${alignr 67}${top mem_res 2}
+${alignr 67}${top mem_res 3}
+${alignr 67}${top mem_res 4}
+${alignr 67}${top mem_res 5}
+
+${voffset -77}${alignr 18}${top mem 1}
+${alignr 18}${top mem 2}
+${alignr 18}${top mem 3}
+${alignr 18}${top mem 4}
+${alignr 18}${top mem 5}
+#
+#
+${voffset 20}${font Arial:bold:size=14}${color Tan1}N${font Arial:bold:size=11}ETWORK ${color DarkSlateGray}${voffset -3}${hr 4}${color}${font Arial:regular:size=8}
+${voffset 10}${alignc 58}${font Arial:bold:size=13}UP${alignc -73}DOWN${font Arial:regular:size=8}
+${voffset 0}${offset 10}${upspeedgraph eth0 40,110 006400 8b8b00 -t}${alignr 10}${downspeedgraph eth0 40,110 006400 8b8b00 -t}
+${voffset -3}${alignc 53}${upspeed}${alignc -75}${downspeed}
+#
+#
+
+

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+conky -c ~/.conky/system_conkyrc -d -a top_right -x 0 -y 60 $
+#the line above needs a "&" at the end but not the last line
+#conky -c ~/.conky/my_second_conkyrc 
+conky -c ~/.conky/weather_conkyrc -d -a middle_middle $
